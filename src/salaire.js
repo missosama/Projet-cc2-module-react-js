@@ -19,16 +19,33 @@ const Salaire=()=>{
     const[tabpr1,setPr1]=useState([0,0,0,0,0,0,0,0,0])
     const[tabdate,setDate]=useState([])
     const addPurchase = () => {
-        
-            setPurchase(purchase => [...purchase, {idSalary,Iname,Cat,price,dt}])
-            setId(idSalary=>idSalary-price)
-            setPr(tabpr => [...tabpr, price])
-            setDate(tabdate=>[...tabdate,dt])
-            tabpr1[8]=idSalary-price;
-             tabpr1[labels2.indexOf(Cat)]+=parseFloat(price);
-             console.log(tabpr1)
+        if(parseFloat(price)<parseFloat(idSalary)){
+          setPurchase(purchase => [...purchase, {idSalary,Iname,Cat,price,dt}])
+          setId(idSalary=>idSalary-price)
+          setPr(tabpr => [...tabpr, price])
+          setDate(tabdate=>[...tabdate,dt])
+          tabpr1[8]=parseFloat(idSalary)-parseFloat(price);
+           tabpr1[labels2.indexOf(Cat)]+=parseFloat(price);
+           console.log(tabpr1) 
+        }
+            else{
+              alert("Your Salary Is Not Enough");
+            }
 
     }
+    const RemovePurchase = (nom,d,ct,pr) => {
+      if(window.confirm("Voulez vous suppimer cette tache ?")){
+        setPurchase(purchase => purchase.filter(item => item !== nom));
+        setPr(tabpr => tabpr.filter(item => item !== pr));
+        setDate(tabdate=>tabdate.filter(item => item !== d));
+        tabpr1[8]=parseFloat(idSalary)-parseFloat(pr);
+        tabpr1[labels2.indexOf(ct)]-=parseFloat(pr);
+        setId(idSalary=>parseFloat(idSalary)+parseFloat(pr))
+
+      }
+      
+  }
+
    
     const labels = tabdate;
 
@@ -45,7 +62,7 @@ const Salaire=()=>{
         },
     ],
     };
-    const labels2 = ["Housing","Transporation","Food","Utilities","Insurance","Medical and health care","Clothes","Saving","Salary"];
+    const labels2 = ["Housing","Transporation","Food","Utilities","Insurance","Medical","Clothes","Saving","Salary"];
 
     const data2 = {
         labels: labels2,
@@ -93,7 +110,7 @@ const Salaire=()=>{
                 <input type="text" id="Iname" name="Iname" value={Iname} onChange={(e) => setItem(e.target.value)} required/>
                 <select id="cat" name="cat" value={Cat} onChange={(e) => setCat(e.target.value)} required>
                     <option value={"Housing"}>Housing</option>
-                    <option value={"Tronsporation"}>Transporation</option>
+                    <option value={"Transporation"}>Transporation</option>
                     <option value={"Food"}>Food</option>
                     <option value={"Utilities"}>Utilities</option>
                     <option value={"Insurance"}>Insurance</option>
@@ -117,6 +134,7 @@ const Salaire=()=>{
                    <td>Price</td>
                    <td>Date</td>
                    <td>The Rest</td>
+                   <td>Action</td>
                 </table>
             {purchase.map((pur,index) => <div key={index} className='purchase'> 
                     <table  id="table">
@@ -125,6 +143,7 @@ const Salaire=()=>{
                         <td>{pur.price}</td>
                         <td>{pur.dt}</td>
                         <td>{pur.idSalary-pur.price}</td>
+                        <td id="btn2">  <button onClick={() =>  RemovePurchase(pur,dt,Cat,price)}>Remove</button></td>
                         
                     </table>
                         
